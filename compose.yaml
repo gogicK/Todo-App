@@ -8,7 +8,7 @@ services:
     container_name: symfony_php_dev
     volumes:
       # Monte le code de votre projet dans le conteneur
-      - ./:/var/www/html
+      - ./:/var/www/html:cached
       # Vous pouvez décommenter pour monter un php.ini customisé si besoin
       # - ./docker/php/php.ini:/usr/local/etc/php/php.ini:ro
     depends_on:
@@ -24,7 +24,7 @@ services:
       - "8000:80"
     volumes:
       # Monte le code (nginx a besoin d'accéder aux assets dans /public)
-      - ./:/var/www/html
+      - ./:/var/www/html:cached
       # Monte la configuration Nginx spécifique à Symfony
       - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
     depends_on:
@@ -35,10 +35,10 @@ services:
   db:
     image: mysql:8.0 # Ou une version spécifique de MySQL
     container_name: symfony_mysql_dev
-    command: --default-authentication-plugin=mysql_native_password # Pour compatibilité avec anciennes versions de PHP/Symfony si besoin
+    #command: --default-authentication-plugin=mysql_native_password # Pour compatibilité avec anciennes versions de PHP/Symfony si besoin
     environment:
-      MYSQL_ROOT_PASSWORD: root_password # Changez ceci (même pour dev, c'est mieux)
-      MYSQL_DATABASE: symfony_db # Nom de la base de données
+      MYSQL_ROOT_PASSWORD: root # Changez ceci (même pour dev, c'est mieux)
+      MYSQL_DATABASE: todo_app_db # Nom de la base de données
       MYSQL_USER: symfony_user # Utilisateur de la BDD
       MYSQL_PASSWORD: symfony_password # Mot de passe de l'utilisateur
     volumes:

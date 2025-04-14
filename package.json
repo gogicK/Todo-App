@@ -1,5 +1,11 @@
 {
   "devDependencies": {
     "bootstrap": "^5.3.5"
+  },
+  "scripts": {
+    "dev-server": "encore dev-server",
+    "dev": "encore dev",
+    "watch": "encore dev --watch",
+    "build": "encore production --progress"
   }
 }
