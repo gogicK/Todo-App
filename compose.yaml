@@ -50,12 +50,31 @@ services:
       - "33061:3306"
     networks:
       - symfony_net
+  
+  adminer: # Ou appelez-le phpmyadmin si vous préférez cette image
+    image: adminer # Image officielle d'Adminer (très légère)
+    # Pour phpMyAdmin, utilisez : image: phpmyadmin/phpmyadmin
+    ports:
+      - "8080:8080" # Accès depuis votre navigateur via http://localhost:8080
+    # Si vous utilisez phpMyAdmin, le port interne est souvent 80:
+    # ports:
+    #   - "8081:80" # Accès via http://localhost:8081
+    environment:
+      # Pour phpMyAdmin, vous pourriez avoir besoin de lier à la DB:
+      # PMA_HOST: mysql # Nom du service de base de données
+      # PMA_PORT: 3306
+      # MYSQL_ROOT_PASSWORD: root_password # Ou les identifiants spécifiques
+      ADMINER_DEFAULT_SERVER: symfony_mysql_dev # Pré-remplit le nom du serveur dans Adminer
+    depends_on:
+      - db # S'assure que mysql démarre avant
+    networks:
+      - symfony_net
 
 # Volume nommé pour stocker les données de la base de données
 volumes:
   db_data:
 
-    # Réseau interne pour que les conteneurs communiquent
+# Réseau interne pour que les conteneurs communiquent
 networks:
   symfony_net:
     driver: bridge
