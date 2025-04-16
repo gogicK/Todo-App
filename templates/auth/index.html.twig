@@ -1,12 +1,72 @@
+{# templates/security/login.html.twig #}
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello AuthPageController!{% endblock %}
+{% block title %}Connexion / Inscription - Todo App{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('vendor/bootstrap/css/bootstrap.min.css') }}">
+    {# Lien vers votre CSS personnalisé si nécessaire #}
+    {# <link rel="stylesheet" href="{{ asset('app.css') }}"> #}
+{% endblock %}
 
 {% block body %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-4">
+            <div class="card shadow-sm">
+                <div class="card-body">
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+                    {# Affichage des messages flash (ex: succès inscription) #}
+                    {% for label, messages in app.flashes %}
+                        {% for message in messages %}
+                            <div class="alert alert-{{ label }} alert-dismissible fade show" role="alert">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        {% endfor %}
+                    {% endfor %}
 
-    This friendly message is coming from: AuthPage !!
-</div>
+                    {# Le contrôleur Stimulus englobe les deux sections #}
+                    <div {{ stimulus_controller('toggle-forms') }}>
+
+                        {# --- Section Connexion --- #}
+                        <div {{ stimulus_target('toggle-forms', 'login') }}> {# Pas de d-none ici = visible par défaut #}
+                            <h1 class="card-title text-center mb-4 h3">Connexion</h1>
+                             {% if error %}
+                                <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+                            {% endif %}
+                            <form method="post" action="{{ path('login') }}">
+                                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                                <div class="mb-3">
+                                    <label for="username" class="form-label">Email</label>
+                                    <input type="email" value="{{ last_username }}" name="_username" id="username" class="form-control" autocomplete="email" required autofocus>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="password" class="form-label">Mot de passe</label>
+                                    <input type="password" name="_password" id="password" class="form-control" autocomplete="current-password" required>
+                                </div>
+                                <div class="d-grid mb-3">
+                                    <button class="btn btn-primary" type="submit">
+                                        Se connecter
+                                    </button>
+                                </div>
+                                <p class="text-center mb-0">
+                                    Pas encore de compte ?
+                                    <a href="#" {{ stimulus_action('toggle-forms', 'showRegister') }}>Inscrivez-vous ici</a>
+                                </p>
+                            </form>
+                        </div> {# Fin Section Connexion #}
+
+                        {# --- Section Inscription (rendue via le contrôleur) --- #}
+                        {# Ceci va appeler RegistrationController::register et inclure le rendu de _register_form.html.twig #}
+                        {{ render(controller('App\\Controller\\RegistrationController::register')) }}
+
+                    </div> {# Fin contrôleur Stimulus #}
+
+                </div> {# Fin card-body #}
+            </div> {# Fin card #}
+        </div> {# Fin col #}
+    </div> {# Fin row #}
+</div> {# Fin container #}
 {% endblock %}

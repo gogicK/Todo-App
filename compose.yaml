@@ -50,8 +50,9 @@ services:
       - "33061:3306"
     networks:
       - symfony_net
-  
-  adminer: # Ou appelez-le phpmyadmin si vous préférez cette image
+
+  adminer:
+    # Ou appelez-le phpmyadmin si vous préférez cette image
     image: adminer # Image officielle d'Adminer (très légère)
     # Pour phpMyAdmin, utilisez : image: phpmyadmin/phpmyadmin
     ports:
@@ -74,7 +75,7 @@ services:
 volumes:
   db_data:
 
-# Réseau interne pour que les conteneurs communiquent
+    # Réseau interne pour que les conteneurs communiquent
 networks:
   symfony_net:
     driver: bridge
